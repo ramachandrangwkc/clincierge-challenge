@@ -1,11 +1,11 @@
 import { Model } from "objection";
+import Customer from "./Customer";
 import Pet from "./Pet";
-import Purchase from "./Purchase";
 
-class Customer extends Model {
+class Gift extends Model {
   // Table name is the only required property.
   static get tableName() {
-    return "customers";
+    return "gifts";
   }
 
   // Optional JSON schema. This is not the database schema!
@@ -16,14 +16,13 @@ class Customer extends Model {
   static get jsonSchema() {
     return {
       type: "object",
-      required: ["firstName", "lastName", "email"],
-
+      required: ["customerId", "petId"],
       properties: {
         id: { type: "string" },
-        firstName: { type: "string", minLength: 1, maxLength: 255 },
-        lastName: { type: "string", minLength: 1, maxLength: 255 },
-        email: { type: "string" },
-        isGiftIssued: {type: "boolean"}
+        customerId: { type: "string" },
+        petId: { type: "string" },
+        species: { type: "string" },
+        message: { type: "string" }
       },
     };
   }
@@ -31,25 +30,24 @@ class Customer extends Model {
   // This object defines the relations to other models.
   static get relationMappings() {
     return {
-      pets: {
-        relation: Model.HasManyRelation,
-        modelClass: Pet,
+      customers: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Customer,
         join: {
-          from: "customers.id",
-          to: "pets.ownerId",
+          from: "gifts.customerId",
+          to: "customers.id",
         },
       },
-
-      purchases: {
-        relation: Model.HasManyRelation,
-        modelClass: Purchase,
+      pets: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Pet,
         join: {
-          from: "customers.id",
-          to: "purchases.customerId",
+          from: "gifts.petId",
+          to: "pets.id",
         },
       },
     };
   }
 }
 
-export default Customer;
+export default Gift;
