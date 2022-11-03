@@ -52,4 +52,13 @@ class Customer extends Model {
   }
 }
 
+
+export type CustomerPurchaseHistoryType = {
+  isGiftIssued: boolean;
+  pets:[{species: string, id:string}],
+  totalPurchases: number
+};
+
+
+
 export default Customer;

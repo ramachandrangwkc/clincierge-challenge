@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import Controller from "../CustomersController";
 import Service from "../../service/customers/CustomersService";
 import ApiError from "../../middleware/ApiError";
+import Customer from "../../model/Customer";
 
 const { expect } = chai;
 const sandbox = sinon.createSandbox();
@@ -30,6 +31,7 @@ describe("src :: controller :: CustomersController", () => {
     next = sandbox.spy();
   });
 
+
   afterEach(() => {
     sandbox.reset();
     sandbox.restore();
@@ -40,9 +42,38 @@ describe("src :: controller :: CustomersController", () => {
       it("calls service.getAll()", async () => {
         // arrange
         // act
-        await controller.getAll(req as Request, res as Response, next);
+       const customers = await controller.getAll(req as Request, res as Response, next);
+
         // assert
         sandbox.assert.calledOnce(service.getAll);
+      });
+    });
+
+    context("when there is an error", () => {
+      it("calls next with ApiError.internal", async () => {
+        // arrange
+        service.getAll.rejects(new Error("error"));
+        // act
+        await controller.getAll(req as Request, res as Response, next);
+       
+        // assert
+        sandbox.assert.calledOnce(next);
+        sandbox.assert.calledWith(next, sandbox.match.instanceOf(ApiError));
+      });
+    });
+  });
+
+
+  describe("# getAllGifts", () => {
+    context("when there isn't an error", () => {
+      it("calls service.getAllGifts()", async () => {
+        // arrange
+        // act
+        req = { params: { customerId: "" } }
+
+        await controller.getAllGifts(req as Request, res as Response, next);
+        // assert
+        sandbox.assert.calledOnce(service.getAllGifts);
       });
     });
 
