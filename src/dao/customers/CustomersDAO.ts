@@ -16,6 +16,12 @@ class CustomersDAO extends DAO<Customer> {
     super(_customer);
   }
 
+  /**
+   * 
+   * @param id The customer Id.
+   * @param historyInMonths The number of months to check the history of purchase
+   * @returns A objection object of type CustomerPurchaseHistoryType.
+   */
   getCustomerWithPurchaseHistory(id: string, historyInMonths: number = 6) {
     let date = new Date();
     date.setMonth(date.getMonth() - historyInMonths);

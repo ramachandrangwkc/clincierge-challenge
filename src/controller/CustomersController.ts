@@ -20,6 +20,12 @@ class CustomersController {
     }
   }
 
+  /// <summary>
+  /// Retrieve a gift object for the customer.
+  /// </summary>
+  /// <remarks>This method will check if the customer is inactive for more than 6 months. If so, returns a gift card as a promotional activity.</remarks>
+  /// <response code="200">Returns Gift Object or Null</response>
+  /// <response code="500">Error message</response>
   async getAllGifts(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this._service.getAllGifts(req.params.customerId);
@@ -29,7 +35,7 @@ class CustomersController {
       next(ApiError.internal(message));
     }
   }
-  
+
 }
 
 export default CustomersController;

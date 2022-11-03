@@ -12,12 +12,13 @@ class CustomersService extends Service<Customer> {
   constructor(protected readonly _customersDAO: CustomersDAO, @inject(GiftsService) private readonly _giftService: GiftsService) {
     super(_customersDAO);
   }
-  /// <summary>
-  /// Retrieve a gift object for the customer.
-  /// </summary>
-  /// <remarks>This method will check if the customer is inactive for more than 6 months. If so, returns a gift card as a promotional activity.</remarks>
-  /// <response code="200">Returns Gift Object or Null</response>
-  /// <response code="500">Oops! Can't create your product right now</response>
+  /**
+   * 
+   * @param customerId The customer Id to check the gift eligibility
+   * @returns Returns a object of type Gift to the controller if the customer is eligible
+   * If not Eligible, it returns a null.
+   * It also returns a ApiError.notFound issue if the customer id is not valid.
+   */
   getAllGifts(customerId: string) {
     return new Promise(async (resolve, reject) => {
       const trx = await Customer.startTransaction();
